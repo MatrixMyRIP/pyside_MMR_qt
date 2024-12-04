@@ -32,11 +32,11 @@ class Window(QtWidgets.QWidget):
 
         self.ui = Ui_Form()
         self.ui.setupUi(self)
+        self.initSignals()
+
+    def initSignals(self):
         self.ui.pushButtonMoveCoords.clicked.connect(self.MoveCoords)
         self.ui.pushButtonGetData.clicked.connect(self.GetDataScreen)
-
-    # def initSignals(self) -> None:
-    # self.ui.pushButtonMoveCoords.clicked.connect(self.OnpushButtonMoveCoords)
 
     def MoveCoords(self):
         y = self.ui.spinBoxY.value()

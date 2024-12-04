@@ -18,13 +18,52 @@
    в него соответствующие значения
 """
 
-from PySide6 import QtWidgets
+from PySide6 import QtWidgets, QtCore, QtGui
+from PySide6.QtCore import Qt
+
+
+from ui.d_eventfilter_settings_form import Ui_Form
 
 
 class Window(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
+
+        self.ui = Ui_Form()
+        self.ui.setupUi(self)
+        self.settings = QtCore.QSettings("MyMusic")
+        self.initSignals()
+        self.ui.dial.keyPressEvent = self.ValueEvent
+
+    def initSignals(self) -> None:
+        self.ui.dial.valueChanged.connect(self.value_all)
+        self.ui.horizontalSlider.valueChanged.connect(self.value_all)
+        self.ui.lcdNumber.display(self.value_all())
+
+
+    def value_all(self):
+        value = self.ui.dial.value()
+        self.ui.horizontalSlider.setValue(value)
+        self.ui.lcdNumber.display(value)
+
+
+    def ValueEvent(self, event):
+         if event.key() == Qt.Key_Plus:
+             self.ui.dial.setValue(self.ui.dial.value() + 1)
+         elif event.key() == Qt.Key_Minus:
+             self.ui.dial.setValue(self.ui.dial.value() - 1)
+         else:
+             self.keyPressEvent()
+
+
+
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
