@@ -61,6 +61,7 @@ class Window(QtWidgets.QWidget):
             self.ui.plainTextEdit.appendPlainText(f"{key}: {value}")
 
         self.ui.plainTextEdit.appendPlainText(time.ctime())
+        print(data)
 
     def moveEvent(self, event: QtGui.QMoveEvent):
         oldPos = event.oldPos()

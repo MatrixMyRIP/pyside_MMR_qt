@@ -56,7 +56,9 @@ class Window(QtWidgets.QWidget):
         elif key == Qt.Key_Minus:
             self.ui.dial.setValue(self.ui.dial.value() - 1)
         else:
-            self.keyPressEvent()
+            return
+
+
 
 
 
