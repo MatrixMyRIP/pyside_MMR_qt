@@ -49,12 +49,15 @@ class Window(QtWidgets.QWidget):
 
 
     def ValueEvent(self, event):
-         if event.key() == Qt.Key_Plus:
-             self.ui.dial.setValue(self.ui.dial.value() + 1)
-         elif event.key() == Qt.Key_Minus:
-             self.ui.dial.setValue(self.ui.dial.value() - 1)
-         else:
-             self.keyPressEvent()
+        key = event.key()
+        if key == Qt.Key_Plus:
+            self.ui.dial.setValue(self.ui.dial.value() + 1)
+        elif key == Qt.Key_Minus:
+            self.ui.dial.setValue(self.ui.dial.value() - 1)
+        else:
+            self.keyPressEvent()
+
+
 
 
 
