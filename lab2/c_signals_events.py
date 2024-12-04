@@ -67,6 +67,7 @@ class Window(QtWidgets.QWidget):
     def event(self, event):
         if event.type() == QtCore.QEvent.Type.WindowStateChange:
             self.showWindowState()
+            # self.showWindowState_2()
         if event.type() == QtCore.QEvent.Type.ActivationChange:
             self.showWindowActiv()
 
@@ -78,6 +79,12 @@ class Window(QtWidgets.QWidget):
             return f"свернуто"
         else:
             return f"развёрнуто"
+
+    # def showWindowState_2(self):
+    #     if self.isFullScreen():
+    #         return f"развёрнуто"
+    #     else:
+    #         return f"свернуто"     # В этом случае выдает с ошибкой - пишет, что свернуто.
 
     def showWindowActiv(self):
         if self.isActiveWindow():
