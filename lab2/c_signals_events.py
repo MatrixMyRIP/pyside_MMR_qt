@@ -20,8 +20,8 @@
     * При изменении размера окна выводить его новый размер
 """
 import time
-from PySide6 import QtWidgets, QtGui
-from PySide6.QtWidgets import QApplication
+from PySide6 import QtWidgets, QtGui, QtCore
+from PySide6.QtGui import QGuiApplication
 from ui.c_signals_events_form import Ui_Form
 
 
@@ -46,22 +46,45 @@ class Window(QtWidgets.QWidget):
 
 
     def GetDataScreen(self):
-        screen = QApplication.screens()[0]
-        data = {"Кол-во экранов": len(QApplication.screens()),
+        data = {"Кол-во экранов": QGuiApplication.screens(),
                 "Текущее основное окно": self,
-                "Разрешение экрана": [screen.size(), screen.geometry()],
+                "Разрешение экрана": QGuiApplication.primaryScreen().size(),
                 "На каком экране окно находится": self.screen(),
                 "Размеры окна": self.size(),
                 "Минимальные размеры окна": self.minimumSize(),
                 "Текущее положение (координаты) окна": self.geometry(),
                 "Координаты центра приложения": self.geometry().center(),
-                "Отслеживание состояния окна (свернуто/развёрнуто/активно/отображено)": "активно" if self.isActiveWindow() else "свернуто"}
+                "Отслеживание состояния окна (свернуто/развёрнуто/активно/отображено)": [self.showWindowState(),
+                                                                                         self.showWindowActiv()]
+                }
 
         for key, value in data.items():
             self.ui.plainTextEdit.appendPlainText(f"{key}: {value}")
 
         self.ui.plainTextEdit.appendPlainText(time.ctime())
         print(data)
+
+    def event(self, event):
+        if event.type() == QtCore.QEvent.Type.WindowStateChange:
+            self.showWindowState()
+        if event.type() == QtCore.QEvent.Type.ActivationChange:
+            self.showWindowActiv()
+
+        return super().event(event)
+
+
+    def showWindowState(self):
+        if self.isHidden():
+            return f"свернуто"
+        else:
+            return f"развёрнуто"
+
+    def showWindowActiv(self):
+        if self.isActiveWindow():
+            return f"активно"
+        else:
+            f"отображено"
+
 
     def moveEvent(self, event: QtGui.QMoveEvent):
         oldPos = event.oldPos()
