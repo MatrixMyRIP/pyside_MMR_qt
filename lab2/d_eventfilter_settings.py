@@ -46,6 +46,7 @@ class Window(QtWidgets.QWidget):
         value = self.ui.dial.value()
         self.ui.horizontalSlider.setValue(value)
         self.ui.lcdNumber.display(value)
+        print(value)
 
 
     def ValueEvent(self, event):
@@ -56,6 +57,7 @@ class Window(QtWidgets.QWidget):
             self.ui.dial.setValue(self.ui.dial.value() - 1)
         else:
             self.keyPressEvent()
+
 
 
 
