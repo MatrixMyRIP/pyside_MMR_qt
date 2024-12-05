@@ -30,47 +30,48 @@ class Window(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
 
+        self.lcd_modes = {
+            "hex": QtWidgets.QLCDNumber.Mode.Hex,
+            "oct": QtWidgets.QLCDNumber.Mode.Oct,
+            "bin": QtWidgets.QLCDNumber.Mode.Bin,
+            "dec": QtWidgets.QLCDNumber.Mode.Dec
+        }
+
         self.ui = Ui_Form()
         self.ui.setupUi(self)
         self.settings = QtCore.QSettings("MyMusic")
         self.initSignals()
-        self.ui.dial.keyPressEvent = self.ValueEvent
+        self.ui.comboBox.addItems(list(self.lcd_modes.keys()))
+        self.ui.comboBox.currentTextChanged.connect(self.lcd_mode)
+
+        self.ui.comboBox.setCurrentText(self.settings.value("DispMode", "bin"))
+        self.ui.lcdNumber.display(self.settings.value("lcdNumber", 0))
+
+
 
     def initSignals(self):
         self.ui.dial.valueChanged.connect(self.value_all)
         self.ui.horizontalSlider.valueChanged.connect(self.value_all)
-        self.ui.lcdNumber.display(self.value_all())
 
-
-    def value_all(self):
-        value = self.ui.dial.value()
+    def value_all(self, value):
+        self.ui.dial.setValue(value)
         self.ui.horizontalSlider.setValue(value)
         self.ui.lcdNumber.display(value)
+        self.settings.setValue("lcdNumber", value)
         print(value)
 
-
-    def ValueEvent(self, event):
+    def keyPressEvent(self, event):
         key = event.key()
         if key == Qt.Key_Plus:
             self.ui.dial.setValue(self.ui.dial.value() + 1)
         elif key == Qt.Key_Minus:
             self.ui.dial.setValue(self.ui.dial.value() - 1)
         else:
-            return super().ValueEvent(event)
+            return
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    def lcd_mode(self, mode):
+        self.ui.lcdNumber.setMode(self.lcd_modes[mode])
+        self.settings.setValue("DispMode", mode)
 
 
 if __name__ == "__main__":
