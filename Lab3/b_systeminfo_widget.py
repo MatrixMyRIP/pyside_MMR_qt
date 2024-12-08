@@ -11,3 +11,49 @@
 5. установку времени задержки сделать "горячей", т.е. поток должен сразу
 реагировать на изменение времени задержки
 """
+
+from PySide6 import QtWidgets
+
+from ui.system_info import Ui_Form
+from a_threads import SystemInfo
+
+
+class Window(QtWidgets.QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        self.ui = Ui_Form()
+        self.ui.setupUi(self)
+
+    def initThreads(self) -> None:
+        self.thread = SystemInfo()
+        self.thread.systemInfoReceived.connect(self.checkCPU)
+        self.thread.systemInfoReceived.connect(self.checkRAM)
+        self.thread.start()
+
+    def checkCPU(self, cpu_value) -> None:
+        self.ui.CPULabel.setText(f"CPU usage: {cpu_value} %")
+
+    def checkRAM(self, ram_value) -> None:
+        self.ui.RAMLabel.setText(f"RAM usage: {ram_value} %")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+if __name__ == "__main__":
+    app = QtWidgets.QApplication()
+
+    window = Window()
+    window.show()
+
+    app.exec()
