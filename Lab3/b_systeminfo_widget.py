@@ -38,8 +38,8 @@ class Window(QtWidgets.QWidget):
         self.ui.DelayLineEdit.textChanged.connect(self.onDelayLineEditTextChanged)
 
     def checkUP(self, value) -> None:
-        self.ui.CPULabel.setText(f"CPU usage: {value[0]} %")
-        self.ui.RAMLabel.setText(f"RAM usage: {value[0]} %")
+        self.ui.CPULabel.setText(f"CPU usage: {value} %")
+        self.ui.RAMLabel.setText(f"RAM usage: {value} %")
 
     def onDelayLineEditTextChanged(self, data):
         try:
