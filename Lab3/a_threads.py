@@ -10,7 +10,8 @@ from PySide6 import QtCore
 
 
 class SystemInfo(QtCore.QThread):
-    systemInfoReceived = QtCore.Signal(list)  # TODO Создайте экземпляр класса Signal и передайте ему в конструктор тип данных передаваемого значения (в текущем случае list)
+    systemInfoReceived = QtCore.Signal(
+        list)  # TODO Создайте экземпляр класса Signal и передайте ему в конструктор тип данных передаваемого значения (в текущем случае list)
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -26,6 +27,9 @@ class SystemInfo(QtCore.QThread):
             self.systemInfoReceived.emit([cpu_value,
                                           ram_value])  # TODO с помощью метода .emit передайте в виде списка данные о загрузке CPU и RAM
             time.sleep(self.delay)  # TODO с помощью функции .sleep() приостановите выполнение цикла на время self.delay
+
+    def setDelay(self, delay):
+        self.delay = delay
 
 
 class WeatherHandler(QtCore.QThread):
@@ -52,15 +56,12 @@ class WeatherHandler(QtCore.QThread):
         # TODO настройте метод для корректной работы
 
         while self.__status:
-            try:
-                response = requests.get(self.__api_url)
-                if response.status_code == 200:
-                    data = response.json()
-                    self.weather_signal.emit(data)
-                else:
-                    print("Нет данных")
-            except:
-                print("Ошибка")
+            response = requests.get(self.__api_url)
+            if response.status_code == 200:
+                data = response.json()
+                self.weather_signal.emit(data)
+            else:
+                print("Нет данных")
         time.sleep(self.__delay)
 
         # TODO Примерный код ниже

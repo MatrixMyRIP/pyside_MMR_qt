@@ -13,6 +13,8 @@
 """
 
 from PySide6 import QtWidgets
+from PySide6.QtWidgets import QLineEdit
+import traceback
 
 from ui.system_info import Ui_Form
 from a_threads import SystemInfo
@@ -22,32 +24,31 @@ class Window(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
 
+        self.initThreads()
         self.ui = Ui_Form()
         self.ui.setupUi(self)
+        self.initSignals()
 
     def initThreads(self) -> None:
         self.thread = SystemInfo()
-        self.thread.systemInfoReceived.connect(self.checkCPU)
-        self.thread.systemInfoReceived.connect(self.checkRAM)
+        self.thread.systemInfoReceived.connect(self.checkUP)
         self.thread.start()
 
-    def checkCPU(self, cpu_value) -> None:
-        self.ui.CPULabel.setText(f"CPU usage: {cpu_value} %")
+    def initSignals(self) -> None:
+        self.ui.DelayLineEdit.textChanged.connect(self.onDelayLineEditTextChanged)
 
-    def checkRAM(self, ram_value) -> None:
-        self.ui.RAMLabel.setText(f"RAM usage: {ram_value} %")
+    def checkUP(self, value) -> None:
+        self.ui.CPULabel.setText(f"CPU usage: {value[0]} %")
+        self.ui.RAMLabel.setText(f"RAM usage: {value[0]} %")
 
-
-
-
-
-
-
-
-
-
-
-
+    def onDelayLineEditTextChanged(self, data):
+        try:
+            delay = int(data)
+            self.thread.setDelay(delay)
+        except Exception:
+            traceback.print_exc()
+            pass
+        # print(delay)
 
 
 if __name__ == "__main__":
