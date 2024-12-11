@@ -15,7 +15,7 @@ from ui.ui_weather import Ui_Form
 from a_threads import WeatherHandler
 
 
-class Window(QtWidgets.QWidget):
+class WeatherWindow(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
 
@@ -54,7 +54,7 @@ class Window(QtWidgets.QWidget):
 if __name__ == "__main__":
     app = QtWidgets.QApplication()
 
-    window = Window()
+    window = WeatherWindow()
     window.show()
 
     app.exec()
