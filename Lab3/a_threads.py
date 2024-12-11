@@ -13,9 +13,9 @@ class SystemInfo(QtCore.QThread):
     systemInfoReceived = QtCore.Signal(
         list)  # TODO Создайте экземпляр класса Signal и передайте ему в конструктор тип данных передаваемого значения (в текущем случае list)
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, delay=None):
         super().__init__(parent)
-        self.delay = None  # TODO создайте атрибут класса self.delay = None, для управлением задержкой получения данных
+        self.delay = delay if delay is not None else 1  # TODO создайте атрибут класса self.delay = None, для управлением задержкой получения данных
 
     def run(self) -> None:  # TODO переопределить метод run
         if self.delay is None:  # TODO Если задержка не передана в поток перед его запуском

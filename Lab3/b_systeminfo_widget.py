@@ -20,7 +20,7 @@ from ui.system_info import Ui_Form
 from a_threads import SystemInfo
 
 
-class SistemWindow(QtWidgets.QWidget):
+class SystemWindow(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
 
@@ -38,8 +38,8 @@ class SistemWindow(QtWidgets.QWidget):
         self.ui.DelayLineEdit.textChanged.connect(self.onDelayLineEditTextChanged)
 
     def checkUP(self, value) -> None:
-        self.ui.CPULabel.setText(f"CPU usage: {value} %")
-        self.ui.RAMLabel.setText(f"RAM usage: {value} %")
+        self.ui.CPULabel.setText(f"CPU usage: {value[0]} %")
+        self.ui.RAMLabel.setText(f"RAM usage: {value[1]} %")
 
     def onDelayLineEditTextChanged(self, data):
         try:
@@ -54,7 +54,7 @@ class SistemWindow(QtWidgets.QWidget):
 if __name__ == "__main__":
     app = QtWidgets.QApplication()
 
-    window = SistemWindow()
+    window = SystemWindow()
     window.show()
 
     app.exec()
