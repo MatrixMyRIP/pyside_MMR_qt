@@ -13,7 +13,6 @@
 """
 
 from PySide6 import QtWidgets
-from PySide6.QtWidgets import QLineEdit
 import traceback
 
 from ui.system_info import Ui_Form
