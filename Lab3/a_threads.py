@@ -39,7 +39,7 @@ class WeatherHandler(QtCore.QThread):
 
         self.__api_url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current_weather=true"
         self.__delay = 10
-        self.__status = None
+        self.__status = True
 
     def setDelay(self, delay) -> None:
         """
@@ -59,9 +59,10 @@ class WeatherHandler(QtCore.QThread):
             if response.status_code == 200:
                 data = response.json()
                 self.weather_signal.emit(data)
+                time.sleep(self.__delay)
             else:
                 print("Нет данных")
-        time.sleep(self.__delay)
+
 
         # TODO Примерный код ниже
         # """

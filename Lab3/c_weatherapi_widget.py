@@ -9,6 +9,8 @@
 3. поле для вывода информации о погоде в указанных координатах
 4. поток необходимо запускать и останавливать при нажатии на кнопку
 """
+import time
+
 from PySide6 import QtWidgets
 
 from ui.ui_weather import Ui_Form
@@ -40,7 +42,7 @@ class WeatherWindow(QtWidgets.QWidget):
 
 
     def print_data(self, text):
-        self.ui.plainTextEdit.appendPlainTex(f'{text}')
+        self.ui.plainTextEdit.appendPlainText(f'{text}')
 
     def enable_lineedit(self):
         if self.ui.start_stop_Button.isChecked():
