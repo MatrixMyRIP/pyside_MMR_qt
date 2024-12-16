@@ -115,7 +115,6 @@ class SystemWindow(QtWidgets.QWidget):
         # self.ui.lineEditdelay.textChanged.connect(self.onDelayLineEditTextChanged)
 
     def update_interval(self, index):
-        global delay
         try:
             if index == 0:
                 delay = 1
