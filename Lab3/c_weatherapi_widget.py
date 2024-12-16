@@ -28,21 +28,29 @@ class WeatherWindow(QtWidgets.QWidget):
     def initSignals(self):
         self.ui.start_stop_Button.clicked.connect(self.buttonThread)
 
-    def buttonThread(self):
+
+    def buttonThread(self, status):
         lat = float(self.ui.line_latedit.text())
         lon = float(self.ui.line_lonedit.text())
         delay = int(self.ui.lineEditDelay.text())
+        self.enable_lineedit()
+        self.ui.start_stop_Button.setText("Остановить" if status else "Определить")
 
+        if not status:
+            self.weather_thread.terminate()
+            self.weather_thread.wait(0.5)
+            return
         self.weather_thread = WeatherHandler(lat, lon)
         self.weather_thread.setDelay(delay)
         self.weather_thread.start()
-        self.enable_lineedit()
         self.weather_thread.weather_signal.connect(self.print_data)
 
 
 
+
     def print_data(self, text):
-        self.ui.plainTextEdit.appendPlainText(f'{text}')
+        # self.ui.plainTextEdit.clear()
+        self.ui.plainTextEdit.appendPlainText(f'{text}\n---\n')
 
     def enable_lineedit(self):
         if self.ui.start_stop_Button.isChecked():

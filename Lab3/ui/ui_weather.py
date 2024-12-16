@@ -44,6 +44,7 @@ class Ui_Form(object):
 
         self.start_stop_Button = QPushButton(Form)
         self.start_stop_Button.setObjectName(u"start_stop_Button")
+        self.start_stop_Button.setText("Определить")
         self.start_stop_Button.setCheckable(True)
         self.start_stop_Button.setChecked(False)
 
@@ -87,7 +88,6 @@ class Ui_Form(object):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Weather", None))
         self.line_latedit.setPlaceholderText(QCoreApplication.translate("Form", u"Latitude (\u0428\u0438\u0440\u043e\u0442\u0430)", None))
         self.line_lonedit.setPlaceholderText(QCoreApplication.translate("Form", u"Longitude (\u0414\u043e\u043b\u0433\u0430\u0442\u0430)", None))
-        self.start_stop_Button.setText(QCoreApplication.translate("Form", u"\u041e\u043f\u0440\u0435\u0434\u0435\u043b\u0438\u0442\u044c", None))
         self.label.setText(QCoreApplication.translate("Form", u"\u0417\u0430\u0434\u0435\u0440\u0436\u043a\u0430 (\u0441\u0435\u043a)", None))
     # retranslateUi
 
