@@ -44,7 +44,7 @@ class SystemInfo(QtCore.QThread):
         scheduler = win32com.client.Dispatch('Schedule.Service')
         scheduler.Connect()
         tasks = scheduler.GetFolder('\\').GetTasks(0)
-        task_list = ""
+        tasks_list = ""
         for task in tasks:
             tsk = task.Name
             pr = str(task.Path)
@@ -62,10 +62,10 @@ class SystemInfo(QtCore.QThread):
                 enb = "Включена"
             if not enb:
                 enb = "Выключена"
-            task_list += (f"Название задачи:{tsk}\nМестоположение задачи:{pr}\nСостояние задачи:{state}\n"
+            tasks_list += (f"Название задачи:{tsk}\nМестоположение задачи:{pr}\nСостояние задачи:{state}\n"
                           f"Последнее время выполнения:{last_run}\nСледующее время выполнения:{next_run}\n"
                           f"Статус задачи:{enb}\n---\n")
-        return task_list
+        return tasks_list
 
 
 class SystemWindow(QtWidgets.QWidget):
