@@ -4,10 +4,12 @@ import cpuinfo
 import os
 
 import psutil
+import win32com.client
 from PySide6 import QtWidgets, QtCore
 from PySide6.QtWidgets import QMainWindow, QTabWidget, QWidget, QVBoxLayout
 
 from exam.ui.process import Ui_Form_Process
+from exam.ui.scheduler import Ui_Form_Scheduler
 from exam.ui.services import Ui_Form_Services
 from ui.general import Ui_Form_General
 
@@ -30,12 +32,40 @@ class SystemInfo(QtCore.QThread):
             ram_used = psutil.virtual_memory().used / (1024.0 ** 3)
             processes = [item.name() for item in psutil.process_iter()]
             services = [service.name() for service in psutil.win_service_iter()]
+            scheduler = self.scheduler_list()
             self.systemInfoReceived.emit([cpu_name['brand_raw'], cpu_cores, cpu_value, round(ram_total, 2),
-                                          round(ram_used, 2), processes, services])
+                                          round(ram_used, 2), processes, services, scheduler])
             time.sleep(self.delay)
 
     def setDelay(self, delay):
         self.delay = delay
+
+    def scheduler_list(self):
+        scheduler = win32com.client.Dispatch('Schedule.Service')
+        scheduler.Connect()
+        tasks = scheduler.GetFolder('\\').GetTasks(0)
+        task_list = ""
+        for task in tasks:
+            tsk = task.Name
+            pr = str(task.Path)
+            state = task.State
+            if state == 1:
+                state = "Выполняется"
+            if state == 2:
+                state = "Готова"
+            if state == 3:
+                state = "Приостановлена"
+            last_run = task.LastRunTime
+            next_run = task.NextRunTime
+            enb = task.Enabled
+            if enb:
+                enb = "Включена"
+            if not enb:
+                enb = "Выключена"
+            task_list += (f"Название задачи:{tsk}\nМестоположение задачи:{pr}\nСостояние задачи:{state}\n"
+                          f"Последнее время выполнения:{last_run}\nСледующее время выполнения:{next_run}\n"
+                          f"Статус задачи:{enb}\n---\n")
+        return task_list
 
 
 class SystemWindow(QtWidgets.QWidget):
@@ -120,7 +150,6 @@ class ProcessWindow(QtWidgets.QWidget):
         self.thread.systemInfoReceived.connect(self.processes_info)
         self.thread.start()
 
-
     def processes_info(self, value):
         self.ui.label_process.setText(f"Работающие процессы: {len(value[5])}")
         self.ui.plainTextEdit.setPlainText('\n'.join(value[5]))
@@ -144,13 +173,22 @@ class ServicesWindow(QtWidgets.QWidget):
         self.ui.plainTextEdit_2.setPlainText('\n'.join(value[6]))
 
 
+class SchedulerWindow(QtWidgets.QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
 
-# class ScheduleWindow(QtWidgets.QWidget):
-#     def __init__(self, parent=None):
-#         super().__init__(parent)
-#
-#         self.ui = Ui_Form_Services()
-#         self.ui.setupUi(self)
+        self.ui = Ui_Form_Scheduler()
+        self.ui.setupUi(self)
+        self.initThreads()
+
+    def initThreads(self) -> None:
+        self.thread = SystemInfo()
+        self.thread.systemInfoReceived.connect(self.scheduler_info)
+        self.thread.start()
+
+    def scheduler_info(self, value):
+        self.ui.plainTextEdit.setPlainText(f"{value[7]}")
+
 
 # class MainWindow(QMainWindow):
 #     def __init__(self):
@@ -163,6 +201,7 @@ class ServicesWindow(QtWidgets.QWidget):
 #         layout_main.addWidget(SystemWindow())
 #         layout_main.addWidget(ProcessWindow())
 #         layout_main.addWidget(ServicesWindow())
+#         layout_main.addWidget(SchedulerWindow())
 #         content_widget.setLayout(layout_main)
 
 class MainWindow(QMainWindow):
@@ -178,10 +217,12 @@ class MainWindow(QMainWindow):
         self.system_info_tab = SystemWindow()
         self.process_tab = ProcessWindow()
         self.service_tab = ServicesWindow()
+        self.scheduler_tab = SchedulerWindow()
 
         tab_widget.addTab(self.system_info_tab, "System Info")
         tab_widget.addTab(self.process_tab, "Process Info")
         tab_widget.addTab(self.service_tab, "Services Info")
+        tab_widget.addTab(self.scheduler_tab, "Scheduler Info")
 
         central_widget = QWidget()
         central_layout = QVBoxLayout(central_widget)
