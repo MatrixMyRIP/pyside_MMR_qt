@@ -45,11 +45,8 @@ class WeatherWindow(QtWidgets.QWidget):
         self.weather_thread.start()
         self.weather_thread.weather_signal.connect(self.print_data)
 
-
-
-
     def print_data(self, text):
-        # self.ui.plainTextEdit.clear()
+        self.ui.plainTextEdit.clear()
         self.ui.plainTextEdit.appendPlainText(f'{text}\n---\n')
 
     def enable_lineedit(self):
